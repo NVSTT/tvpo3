@@ -1,0 +1,28 @@
+# ..gitlab-ci.yml
+image: python:3.9
+
+stages:
+  - test
+  - deploy
+
+variables:
+  PYTHONPATH: "${CI_PROJECT_DIR}"
+
+before_script:
+  - python -m pip install --upgrade pip
+  - pip install pytest
+  - pip install tk
+
+test:
+  stage: test
+  script:
+    - pytest tests/test_calculator.py -v
+
+deploy:
+  stage: deploy
+  script:
+    - ssh $DEPLOY_USER@$DEPLOY_HOST "mkdir -p ~/finance_calculator"
+    - scp -r ./src/* $DEPLOY_USER@$DEPLOY_HOST:~/finance_calculator/
+    - ssh $DEPLOY_USER@$DEPLOY_HOST "cd ~/finance_calculator && python3 main.py &"
+  only:
+    - main
