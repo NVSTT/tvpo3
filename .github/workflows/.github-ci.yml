@@ -1,0 +1,50 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest
+        pip install tk
+        
+    - name: Run tests
+      run: |
+        pytest tests/test_calculator.py -v
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Deploy to server
+      env:
+        DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+        DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+      run: |
+        mkdir -p ~/.ssh
+        echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
+        chmod 600 ~/.ssh/deploy_key
+        ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "mkdir -p ~/finance_calculator"
+        scp -i ~/.ssh/deploy_key -r ./src/* $DEPLOY_USER@$DEPLOY_HOST:~/finance_calculator/
+        ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "cd ~/finance_calculator && python3 main.py &"
