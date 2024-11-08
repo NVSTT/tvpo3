@@ -40,7 +40,7 @@ jobs:
 
       - name: Test SSH Connection
         run: |
-          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "echo Connection successful"
+          ssh -i ~/.ssh/id_ed25519.pub -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "echo Connection successful"
 
       - name: Deploy to server
         env:
