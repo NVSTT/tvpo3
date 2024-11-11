@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from src.calculator import FinanceCalculator
+from calculator import FinanceCalculator
 
 
 class FinanceCalculatorGUI:
