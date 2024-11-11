@@ -1,6 +1,6 @@
 
 import tkinter as tk
-from gui import FinanceCalculatorGUI
+from src.gui import FinanceCalculatorGUI
 
 
 def main():
