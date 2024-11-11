@@ -37,11 +37,6 @@ jobs:
           echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
-
-      - name: Install dependencies
-        run: |
-          sudo dnf update
-          sudo dnf install -y python3-tk os pandas os-sys
           
       - name: Deploy to server
         env:
