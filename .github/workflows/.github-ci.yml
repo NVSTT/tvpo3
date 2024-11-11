@@ -46,4 +46,4 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "mkdir -p ~/finance_calculator"
           scp -i ~/.ssh/id_ed25519 -r ./src/* $DEPLOY_USER@$DEPLOY_HOST:~/finance_calculator/
-          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "cd ~/finance_calculator/src && python3 main.py &"
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "cd ~/finance_calculator && python3 main.py &"
